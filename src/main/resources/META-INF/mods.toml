@@ -1,0 +1,41 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+license="GPL-3.0-only"
+mixinConfigs="dudumeshloader.mixins.json"
+
+[[mods]]
+modId="dudumeshloader"
+version="${mod_version}"
+authors = "${mod_authors}"
+displayName="DuDu Mesh Loader"
+# 上游 TacZ Mesh Loader（原作者 VellEagle）主页；本修改版为独立发行，请勿在此指向他人页面
+displayURL = "https://github.com/VellEagle/TacZMeshLoader/tree/1.20.1"
+logoFile = "assets/dudumeshloader/icon.png"
+description='''${mod_description}'''
+# 本项目基于 TacZ Mesh Loader（GPL-3.0-only）修改；第三方声明见 JAR 内 META-INF/THIRD_PARTY_NOTICES.md
+credits="Based on TacZ Mesh Loader by VellEagle (GPL-3.0-only). Bundles SimpleBedrockModel (LGPL-3.0) and Mayday Animation Engine (MIT)."
+license="GPL-3.0-only"
+
+[[dependencies.${mod_id}]]
+    modId="forge"
+    mandatory=true
+    versionRange="${forge_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="tacz"
+    mandatory=true
+    versionRange="[1.1.0,)"
+    ordering="AFTER"
+    side="CLIENT"
+
+[modproperties.dudumeshloader]
+catalogueImageIcon = "assets/dudumeshloader/icon.png"
