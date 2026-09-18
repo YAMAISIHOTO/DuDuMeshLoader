@@ -8,8 +8,8 @@ modId="dudumeshloader"
 version="${mod_version}"
 authors = "${mod_authors}"
 displayName="DuDu Mesh Loader"
-# 上游 TacZ Mesh Loader（原作者 VellEagle）主页；本修改版为独立发行，请勿在此指向他人页面
-displayURL = "https://github.com/VellEagle/TacZMeshLoader/tree/1.20.1"
+# 本项目主页
+displayURL = "https://github.com/YAMAISIHOTO/DuDuMeshLoader"
 logoFile = "assets/dudumeshloader/icon.png"
 description='''${mod_description}'''
 # 本项目基于 TacZ Mesh Loader（GPL-3.0-only）修改；第三方声明见 JAR 内 META-INF/THIRD_PARTY_NOTICES.md
