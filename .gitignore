@@ -26,3 +26,7 @@ forge*changelog.txt
 
 # 本地构建日志（不属于源码，如 0.2.0 构建输出日志）
 build_log.txt
+
+# 上游 TacZMeshLoader 的 logo，本模组已改用 assets/dudumeshloader/icon.png
+# （保留在磁盘上避免影响构建，但不纳入版本控制）
+src/main/resources/tmllogo.png
