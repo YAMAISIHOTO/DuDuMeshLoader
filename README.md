@@ -55,4 +55,4 @@
 | Mayday Animation Engine | MIT | 经 SBM 传递内嵌 |
 | TaCZ（运行时依赖） | 代码 GPL-3.0 / 资产 CC BY-NC-ND 4.0 | 仅 mixin 依赖其 API，未打包其任何资产 |
 
-本修改版由 Yuu 于 2026-08 起修改。分发二进制时，请同时提供与该 JAR 精确对应的完整源码，并保留 `LICENSE`、`LICENSES/`、`THIRD_PARTY_NOTICES.md` 和本说明。
+本修改版由 SteveDuYu 于 2026-08 起修改。分发二进制时，请同时提供与该 JAR 精确对应的完整源码，并保留 `LICENSE`、`LICENSES/`、`THIRD_PARTY_NOTICES.md` 和本说明。

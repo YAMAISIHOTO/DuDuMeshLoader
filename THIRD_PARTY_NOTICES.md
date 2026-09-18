@@ -13,7 +13,7 @@
 
 原项目贡献者包括 VellEagle、denys-shatin 等；各贡献者保留其各自代码的版权。
 
-Yuu 于 2026-08-13 修改了该项目。主要修改包括：读取 Bedrock `poly_mesh` 的逐角点
+SteveDuYu 于 2026-08-13 修改了该项目。主要修改包括：读取 Bedrock `poly_mesh` 的逐角点
 法线索引、法线矩阵处理、三角形拆分与 RenderType、Accelerated Rendering 网格缓存、
 光影状态切换与批次刷新兼容，以及相关说明和发行材料。本修改版整体继续按
 GPL-3.0-only 分发。
