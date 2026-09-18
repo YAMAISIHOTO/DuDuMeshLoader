@@ -1,5 +1,5 @@
 DuDuMeshLoader - a performance-optimized TaCZ poly_mesh loader for Minecraft 1.20.1 (Forge).
-Copyright (C) 2026 Yuu
+Copyright (C) 2026 SteveDuYu
 Based on TacZ Mesh Loader, Copyright (C) VellEagle and contributors
   (https://github.com/VellEagle/TacZMeshLoader, upstream commit 17dfcc18).
 
