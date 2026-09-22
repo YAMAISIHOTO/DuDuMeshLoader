@@ -35,7 +35,8 @@
 
 ## 构建
 
-需要 JDK 17：
+需要 JDK 17。无需额外准备依赖——SimpleBedrockModel 的二进制与源码已随仓库放在 `libs/` 中
+（其公共 Maven 坐标已失效，构建脚本直接从该目录取用，来源与校验值见 `THIRD_PARTY_NOTICES.md`）。
 
 ```bash
 ./gradlew build
@@ -43,6 +44,11 @@
 ```
 
 正式安装包是 `build/libs/dudumeshloader-0.2.0-all.jar`（含内嵌依赖），不是无 `-all` 后缀的普通 JAR。
+
+> 若构建长时间无输出，通常是网络访问依赖仓库受阻。Gradle 不会读取 `http_proxy` /
+> `https_proxy` 环境变量，需在 `gradle.properties` 里显式声明
+> `systemProp.http.proxyHost`、`systemProp.http.proxyPort`、
+> `systemProp.https.proxyHost`、`systemProp.https.proxyPort`。
 
 ## 来源与许可证
 

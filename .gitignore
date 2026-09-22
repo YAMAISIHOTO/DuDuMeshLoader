@@ -30,3 +30,6 @@ build_log.txt
 # 上游 TacZMeshLoader 的 logo，本模组已改用 assets/dudumeshloader/icon.png
 # （保留在磁盘上避免影响构建，但不纳入版本控制）
 src/main/resources/tmllogo.png
+
+# 个人开发笔记，不随发行仓库公开（保留在本地磁盘）
+/docs/
