@@ -40,6 +40,26 @@ SimpleBedrockModel 作为独立 Jar-in-Jar 库保留自己的 mod id 和版本�
 本项目的完整构建脚本，修改或替换 SBM 后重新构建组合产物；本项目不附加禁止修改、
 调试、逆向或再分发的限制。
 
+### 本仓库内 SimpleBedrockModel 二进制的来源与替换方式
+
+LGPL-3.0 要求接收者能够替换该库并重新构建组合产物。为此，以下信息一并给出：
+
+- 存放位置：本仓库根目录 `libs/`，随源码一同分发（不依赖任何外部二进制分发点）。
+- 文件与校验值（下载后可自行比对，确认与上游一致、未被改动）：
+
+  | 文件 | 用途 | SHA-256 |
+  |------|------|---------|
+  | `libs/simplebedrockmodel-2.2.2-forge+mc1.20.1.jar` | 编译依赖 + 内嵌进 `-all.jar` | `12b7b664e9c434b73f1655f8402050385c526802f2de059ac51abfd60bbbb809` |
+  | `libs/simplebedrockmodel-2.2.2-forge+mc1.20.1-sources.jar` | 对应源码，便于阅读与修改 | `4b886dc17e72b780517b74bca2741008ddaca634d242b756f3e698cae57606c9` |
+
+- 为何放在仓库内：该构件在公共 Maven 仓库上已无法取得（`maven central` 返回 404，
+  本仓库亦未配置 jitpack）。项目构建脚本通过 `repositories { flatDir { dir 'libs' } }`
+  引用它，即实物完全来自本仓库内的上述文件。
+- **如何替换或修改**：直接覆盖 `libs/` 下的同名文件即可（`build.gradle` 按
+  `<name>-<version>.jar` 的文件名匹配，无需改动构建脚本）；随后照常执行构建命令，
+  生成的 `-all.jar` 就会内嵌替换后的版本。若改为在源码层修改，请自上游仓库取得
+  对应 tag 的源码，按 LGPL-3.0 要求附带你的修改说明后再重新构建。
+
 ## Mayday Animation Engine（MAE）
 
 - 项目：Mayday Animation Engine

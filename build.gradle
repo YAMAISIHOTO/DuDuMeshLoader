@@ -113,7 +113,19 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-    // 优先从 maven central 拉取通用依赖（fastutil/asm/commons 等），避免走
+    // libs/ 本地依赖仓库，**必须放在所有远程仓库之前**。
+    //
+    // SimpleBedrockModel 的坐标为 com.github.mcmodderanchor:simplebedrockmodel:2.2.2-forge+mc1.20.1，
+    // 该坐标在任何公共仓库上都取不到（maven central 返回 404，本仓库也未配置 jitpack），
+    // 唯一来源是本目录下 libs/simplebedrockmodel-2.2.2-forge+mc1.20.1.jar。
+    // flatDir 按 "<name>-<version>.jar" 匹配文件名，故上面的坐标能正确命中该文件。
+    // 前置可避免每次构建都先去远程仓库做无效试探（网络不佳时会把构建拖很久）。
+    // 详见 THIRD_PARTY_NOTICES.md「SimpleBedrockModel」一节。
+    flatDir {
+        dir 'libs'
+    }
+
+    // 从 maven central 拉取通用依赖（fastutil/asm/commons 等），避免走
     // spongepowered 镜像——后者 522 时会直接拖垮构建。
     mavenCentral()
     maven {
@@ -124,10 +136,6 @@ repositories {
         name = 'SpongePowered'
         url = 'https://repo.spongepowered.org/repository/maven-public/'
     }
-
-    flatDir {
-        dir 'libs'
-    }
 }
 
 dependencies {
@@ -135,6 +143,8 @@ dependencies {
 
 
 
+    // SimpleBedrockModel：坐标仅作标识用，实物取自 libs/ 目录（见上方 repositories 注释）。
+    // jarJar 要求按 Maven 坐标声明才能内嵌，并据此写入 [-all.jar] 的 jar-in-jar 元数据。
     jarJar(implementation(fg.deobf("com.github.mcmodderanchor:simplebedrockmodel:2.2.2-forge+mc1.20.1"))) {
         jarJar.ranged(it, "[2.2.2,)")
     }
