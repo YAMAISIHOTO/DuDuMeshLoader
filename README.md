@@ -46,9 +46,11 @@
 正式安装包是 `build/libs/dudumeshloader-0.2.0-all.jar`（含内嵌依赖），不是无 `-all` 后缀的普通 JAR。
 
 > 若构建长时间无输出，通常是网络访问依赖仓库受阻。Gradle 不会读取 `http_proxy` /
-> `https_proxy` 环境变量，需在 `gradle.properties` 里显式声明
-> `systemProp.http.proxyHost`、`systemProp.http.proxyPort`、
-> `systemProp.https.proxyHost`、`systemProp.https.proxyPort`。
+> `https_proxy` 环境变量，需显式声明 `systemProp.http.proxyHost`、
+> `systemProp.http.proxyPort`、`systemProp.https.proxyHost`、
+> `systemProp.https.proxyPort`。**建议写在自己的用户级配置**
+> （Windows `%USERPROFILE%\.gradle\gradle.properties`，Linux/macOS
+> `~/.gradle/gradle.properties`）—— 本仓库不内置任何代理设置，避免他人克隆后构建受阻。
 
 ## 来源与许可证
 
