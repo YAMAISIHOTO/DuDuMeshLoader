@@ -22,7 +22,11 @@ eclipse
 run
 
 # Files from Forge MDK
+# 上游规则只挡 forge*changelog.txt，裸 changelog.txt / CREDITS.txt 会漏网
+# （二者都是 Forge 自带模板，与本模组无关），这里补齐以免将来被重新引入
 forge*changelog.txt
+changelog.txt
+CREDITS.txt
 
 # 本地构建日志（不属于源码，如 0.2.0 构建输出日志）
 build_log.txt
