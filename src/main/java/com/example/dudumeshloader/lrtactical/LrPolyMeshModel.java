@@ -48,9 +48,7 @@ public class LrPolyMeshModel extends CustomBedrockModel {
         super(pojo, version);
     }
 
-    // -------------------------------------------------------------------------
     // レンダリング
-    // -------------------------------------------------------------------------
 
     @Override
     public void render(PoseStack poseStack,
@@ -112,9 +110,7 @@ public class LrPolyMeshModel extends CustomBedrockModel {
         }
     }
 
-    // -------------------------------------------------------------------------
     // poly_mesh ロード
-    // -------------------------------------------------------------------------
 
     /**
      * geo_models/ に対応する poly_mesh JSON が存在すればロードする静的ヘルパー。
@@ -181,9 +177,7 @@ public class LrPolyMeshModel extends CustomBedrockModel {
         }
     }
 
-    // -------------------------------------------------------------------------
     // BedrockPart → IPolyMeshBone アダプター
-    // -------------------------------------------------------------------------
 
     private static class LrPartAdapter implements IPolyMeshBone {
         private final BedrockPart part;

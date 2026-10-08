@@ -17,7 +17,7 @@ import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
 /**
- * 注视武器架且手持枪/配件时，在屏幕准星下方显示「按 O 交互」提示（仿 TACZ statue 的交互文案）。
+ * 注视武器架且手持枪/配件时，在屏幕准星下方显示按 O 交互提示（仿 TACZ statue 的交互文案）。
  *
  * <p>仅做提示，不拦截任何输入；实际放入由 {@link DecoWeaponRackInteract} 在按下 TACZ 交互键时触发。</p>
  */

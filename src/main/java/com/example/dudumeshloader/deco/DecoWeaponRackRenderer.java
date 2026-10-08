@@ -45,21 +45,15 @@ import java.util.stream.Collectors;
 /**
  * 渲染 {@link DecoWeaponRackEntity} 指向的 TACZ 方块 index 模型，并按模型内挂载骨骼摆放武器与配件。
  *
- * <p>渲染流程：
- * <ol>
- *   <li>与 {@code DecoBlockRenderer} 相同的变换帧（translate + ZN180 + 绕 Y 按朝向旋转）绘制 rack 模型；
- *   <li>若 index 配置了 {@code animation} + {@code display}，则重建一个 {@link BedrockAnimatedModel}
- *       并由 {@link DecoRackAnimationState} 驱动其动画（随实体 {@code open} 状态机切换）；
- *       否则回退到静态 {@link BedrockModel} 渲染；
- *   <li>在<b>同一变换帧</b>内，分别按 index 的 {@code mount_bones}（武器→{@code weapon_mount} 系）与
- *       {@code attachment_bones}（配件→{@code attachment_mount} 系）逐槽位读取对应骨骼；
- *   <li>沿骨骼链累加其动画后的 {@code pivot}/{@code rotation}（geo 单位，÷16 转方块单位）作为物品位置与朝向，
- *       物品从而跟随架子的开合动画移动；
- *   <li>缩放后用 {@code ItemRenderer.renderStatic(FIXED)} 绘制手持的枪/配件。</li>
- * </ol>
+ * <p>流程：① 用与 {@code DecoBlockRenderer} 相同的变换帧绘制 rack 模型（index 配置了
+ * {@code animation} + {@code display} 时重建 {@link BedrockAnimatedModel} 并由
+ * {@link DecoRackAnimationState} 驱动，否则回退静态 {@link BedrockModel}）；② 在<b>同一变换帧</b>内
+ * 按 index 的 {@code mount_bones} / {@code attachment_bones} 逐槽位取骨骼，沿骨骼链累加动画后的
+ * {@code pivot}/{@code rotation} 作为物品位置与朝向，使物品跟随架子的开合动画移动；③ 缩放后用
+ * {@code ItemRenderer.renderStatic(FIXED)} 绘制。</p>
  *
- * <p>geo 坐标约定（与 TACZ 方块模型一致）：1 个 geo 单位 = 1/16 方块，且模型原点经
- * translate(0.5, 1.5, 0.5) 落在方块上。骨骼 pivot 累加后直接作为同帧平移即可对齐模型。</p>
+ * <p>geo 坐标约定（与 TACZ 方块模型一致）：1 geo 单位 = 1/16 方块，模型原点经
+ * translate(0.5, 1.5, 0.5) 落在方块上，骨骼 pivot 累加后直接作为同帧平移即可对齐模型。</p>
  */
 @OnlyIn(Dist.CLIENT)
 public class DecoWeaponRackRenderer implements BlockEntityRenderer<DecoWeaponRackEntity> {
@@ -184,7 +178,7 @@ public class DecoWeaponRackRenderer implements BlockEntityRenderer<DecoWeaponRac
             // 在模型变换帧内，分别摆放武器与配件（跟随动画后骨骼）
             Level level = blockEntity.getLevel();
             if (level != null) {
-                // hide_on_close（display 选项）：仅处于「完全关闭」(idle_close / CLOSED) 状态时才隐藏武器；
+                // hide_on_close（display 选项）：仅处于完全关闭(idle_close / CLOSED) 状态时才隐藏武器；
                 // 播放 open 动画、idle_open、以及播放 close 动画期间（OPENING/OPEN/CLOSING）都显示武器。
                 // 用动画状态机的 Phase 而非方块实体的 open 字段：close 动画一开始方块实体已切为 false，
                 // 若用 isOpen() 判定则武器会在 close 动画播放期间就提前消失。

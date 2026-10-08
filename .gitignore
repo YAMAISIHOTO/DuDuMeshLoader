@@ -21,19 +21,16 @@ build
 eclipse
 run
 
-# Files from Forge MDK
-# 上游规则只挡 forge*changelog.txt，裸 changelog.txt / CREDITS.txt 会漏网
-# （二者都是 Forge 自带模板，与本模组无关），这里补齐以免将来被重新引入
+# Forge MDK 模板文件
 forge*changelog.txt
 changelog.txt
 CREDITS.txt
 
-# 本地构建日志（不属于源码，如 0.2.0 构建输出日志）
+# 本地构建日志
 build_log.txt
 
-# 上游 TacZMeshLoader 的 logo，本模组已改用 assets/dudumeshloader/icon.png
-# （保留在磁盘上避免影响构建，但不纳入版本控制）
+# 上游 TacZMeshLoader 的 logo（本模组已改用 assets/dudumeshloader/icon.png）
 src/main/resources/tmllogo.png
 
-# 个人开发笔记，不随发行仓库公开（保留在本地磁盘）
+# 本地文档
 /docs/

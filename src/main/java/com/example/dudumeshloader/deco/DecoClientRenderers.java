@@ -44,7 +44,7 @@ public class DecoClientRenderers {
 
     @SubscribeEvent
     public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
-        // 注视武器架且手持枪/配件时显示「按 O 交互」提示，挂在准星之上。
+        // 注视武器架且手持枪/配件时显示按 O 交互提示，挂在准星之上。
         event.registerAbove(VanillaGuiOverlay.CROSSHAIR.id(), "dudumeshloader_rack_overlay", new DecoWeaponRackOverlay());
     }
 }

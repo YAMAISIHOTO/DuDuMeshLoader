@@ -37,9 +37,7 @@ public class ClientAmmoIndexMixin {
     private static final org.apache.logging.log4j.Logger LOG =
             org.apache.logging.log4j.LogManager.getLogger("MeshyLoader");
 
-    // =========================================================================
     // ammo (アイテム表示モデル)
-    // =========================================================================
 
     /**
      * {@code checkTextureAndModel()} の末尾に介入し、ammo アイテムモデルを
@@ -67,9 +65,7 @@ public class ClientAmmoIndexMixin {
         setField(index, ClientAmmoIndex.class, "ammoModel", polyModel);
     }
 
-    // =========================================================================
     // ammo_entity (弾丸エンティティモデル)
-    // =========================================================================
 
     /**
      * {@code checkAmmoEntity()} の末尾に介入し、ammo_entity モデルを
@@ -100,9 +96,7 @@ public class ClientAmmoIndexMixin {
         setField(index, ClientAmmoIndex.class, "ammoEntityModel", polyModel);
     }
 
-    // =========================================================================
     // shell (薬莢モデル)
-    // =========================================================================
 
     /**
      * {@code checkShell()} の末尾に介入し、shell モデルを
@@ -133,9 +127,7 @@ public class ClientAmmoIndexMixin {
         setField(index, ClientAmmoIndex.class, "shellModel", polyModel);
     }
 
-    // =========================================================================
     // 共通ユーティリティ
-    // =========================================================================
 
     /**
      * display JSON の model ID から geo.json パスへ変換する。

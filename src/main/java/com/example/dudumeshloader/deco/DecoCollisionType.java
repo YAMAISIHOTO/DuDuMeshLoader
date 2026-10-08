@@ -6,11 +6,11 @@ import net.minecraft.util.StringRepresentable;
 /**
  * block_deco 的碰撞档位，对应 TACZ 工作台 + 一个无碰撞档位：
  * <ul>
- *   <li>{@link #SINGLE_A} —— 1×1×1（workbench_a 的碰撞）</li>
- *   <li>{@link #DOUBLE_B} —— 2×1×1 横向双块（workbench_b 的碰撞）</li>
- *   <li>{@link #DOUBLE_C} —— 1×2×1 纵向双块（workbench_c 的碰撞）</li>
- *   <li>{@link #SLAB}     —— 底部半砖碰撞（原版 slab 的碰撞）</li>
- *   <li>{@link #NONE}     —— 无碰撞（像原版草/花一样可穿过）</li>
+ *   <li>{@link #SINGLE_A}：1×1×1（workbench_a 的碰撞）</li>
+ *   <li>{@link #DOUBLE_B}：2×1×1 横向双块（workbench_b 的碰撞）</li>
+ *   <li>{@link #DOUBLE_C}：1×2×1 纵向双块（workbench_c 的碰撞）</li>
+ *   <li>{@link #SLAB}：底部半砖碰撞（原版 slab 的碰撞）</li>
+ *   <li>{@link #NONE}：无碰撞（像原版草/花一样可穿过）</li>
  * </ul>
  *
  * <p>该枚举同时作为方块状态属性 {@code collision} 的值，可被方块状态机直接读取，

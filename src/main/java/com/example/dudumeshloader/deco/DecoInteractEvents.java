@@ -44,7 +44,7 @@ public class DecoInteractEvents {
         }
         // 双块（DOUBLE_B/c）非根块（HEAD/UPPER）的实体不渲染武器、也不参与取出，
         // 武器只应落在根块（FOOT/LOWER）实体上。若命中非根块直接 insertItem，会出现
-        // 「物品消失但不在架子上、空手取不出、只有破坏才掉落」的现象。此处与 use()
+        // 物品消失但不在架子上、空手取不出、只有破坏才掉落的现象。此处与 use()
         // 一致，先路由到根实体再插入，保证渲染与取出的实体是同一个。
         if (!DecoWeaponRackBlock.isRoot(state)) {
             BlockPos root = DecoWeaponRackBlock.getRootPos(pos, state);

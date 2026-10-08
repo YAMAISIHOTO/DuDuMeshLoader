@@ -20,16 +20,13 @@ import java.util.Map;
 /**
  * 让 tacz_charms（挂饰 mod）对 poly_mesh 模型兼容的桥接层。
  *
- * <p>charm 的挂饰系统依赖 {@code BedrockPart.cubes}（cube 列表）来判定锚点、提取碰撞盒、
- * 提供 GUI 选点。但纯 poly_mesh 骨骼在 geo.json 上没有 cubes，导致 charm 无法工作。</p>
+ * <p>charm 依赖 {@code BedrockPart.cubes} 判定锚点、提取碰撞盒、提供 GUI 选点，而纯 poly_mesh 骨骼
+ * 在 geo.json 上没有 cubes。本类在模型加载后，为每个只有 poly_mesh 的骨骼按其<b>相对规模</b>
+ * （体积占比 × 顶点占比）把 mesh 顶点沿最长轴二分聚类成 1~20 个簇，每簇生成一个虚拟
+ * {@link BedrockCubeBox} 注入 {@code cubes} 并清空其 polygons（避免 TaCZ 渲染出白盒）。
+ * 多个沿长轴排布的小 AABB 比单一 AABB 更能收紧枪管、枪托、导轨这类细长部件的宽度判定。</p>
  *
- * <p>本类在模型加载后，为每个「只有 poly_mesh、没有 cube」的骨骼，按<b>相对规模</b>（该骨骼
- * 占整把枪的体积占比 × 顶点占比）自适应地把其 mesh 顶点沿最长轴二分聚类成 <b>1~20 个簇</b>，
- * 每簇生成一个虚拟 {@link BedrockCubeBox} 注入 {@code cubes}，并清空其 polygons（避免 TaCZ
- * 渲染出白盒）。charm 对每个小 AABB 单独做碰撞——多个沿长轴排布的小 AABB 比单一 AABB 能
- * 把细长部件（枪管、枪托、导轨）在宽度方向上的判定范围显著收紧。</p>
- *
- * <p>完全不改动 charm 的任何文件；若 charm 未安装则直接跳过。</p>
+ * <p>完全不改动 charm 的任何文件；charm 未安装则直接跳过。</p>
  */
 public final class CharmCompat {
     private static final Logger LOG = LoggerFactory.getLogger("MeshyLoader");
@@ -46,7 +43,7 @@ public final class CharmCompat {
     private static final int MAX_CLUSTERS = 20;
 
     /**
-     * 横截面方向收缩系数：AABB 的「水平宽度轴」（X/Z 平面内、垂直于长度轴的方向）向中心缩到
+     * 横截面方向收缩系数：AABB 的水平宽度轴（X/Z 平面内、垂直于长度轴的方向）向中心缩到
      * 该比例，缓解轴对齐包围盒对圆柱、斜面等部件在宽度方向上的撑大。长度轴与高度轴（Y）都不缩，
      * 保证碰撞盒在长度、高度方向完整覆盖模型表面。
      */
@@ -140,7 +137,7 @@ public final class CharmCompat {
         if (part == null) {
             return;
         }
-        // 只对「有名字、且原本没有 cube」的骨骼注入，避免与混合模型的原版 cube 冲突。
+        // 只对有名字、且原本没有 cube的骨骼注入，避免与混合模型的原版 cube 冲突。
         if (part.name != null && !part.name.isEmpty() && part.cubes.isEmpty()) {
             BoneStats s = stats.get(part);
             if (s != null && s.vertices >= MIN_VERTICES_PER_CLUSTER) {
@@ -166,7 +163,7 @@ public final class CharmCompat {
         }
         int clusterCount = decideClusterCount(s.vertices, totalVertices, s.volume, totalVolume);
         List<List<float[]>> clusters = splitInto(all, clusterCount);
-        // 用整个骨骼的水平长度轴决定「宽度轴」：长度与高度（Y）都不缩，只缩水平宽度。
+        // 用整个骨骼的水平长度轴决定宽度轴：长度与高度（Y）都不缩，只缩水平宽度。
         int widthAxis = horizontalWidthAxis(all);
         int injected = 0;
         for (List<float[]> cluster : clusters) {
@@ -200,18 +197,13 @@ public final class CharmCompat {
     }
 
     /**
-     * 按骨骼占整把枪的<b>相对规模</b>决定簇数（1~{@value MAX_CLUSTERS}），而不是绝对顶点数——
-     * 这样无论模型是几千顶点还是六万顶点，判定都一致。综合两个占比的加权和，顶点占比权重更大
-     * （几何细节才是碰撞贴合的关键）：
+     * 按骨骼占整把枪的<b>相对规模</b>决定簇数（1~{@value MAX_CLUSTERS}），而非绝对顶点数，这样几千
+     * 顶点的模型和六万顶点的模型判定一致。加权和里顶点占比权重更大（几何细节才是碰撞贴合的关键）：
      *
      * <pre>scale = 0.7 * vertexRatio + 0.3 * volumeRatio</pre>
      *
-     * <ul>
-     *   <li>{@code vertexRatio}：骨骼顶点数 / 模型总顶点数（几何信息占比）</li>
-     *   <li>{@code volumeRatio}：骨骼 AABB 体积 / 模型各骨骼 AABB 体积之和（尺寸占比）</li>
-     * </ul>
-     *
-     * 占比越高（又大又精细）拆越细；极小零件（scale &lt; 1%）仍是 1 簇，避免无谓拆分。
+     * {@code vertexRatio} = 该骨骼顶点数 / 模型总顶点数，{@code volumeRatio} = 该骨骼 AABB 体积 /
+     * 各骨骼 AABB 体积之和。占比越高（又大又精细）拆越细；极小零件（scale &lt; 1%）仍是 1 簇。
      */
     private static int decideClusterCount(int boneVertices, int totalVertices,
                                           double boneVolume, double totalVolume) {
@@ -279,7 +271,7 @@ public final class CharmCompat {
     }
 
     /**
-     * 只把 AABB 的「水平宽度轴」向中心收缩到 {@link #WIDTH_SCALE}。长度轴与高度轴（Y）
+     * 只把 AABB 的水平宽度轴向中心收缩到 {@link #WIDTH_SCALE}。长度轴与高度轴（Y）
      * 都不缩，保证碰撞盒在长度、高度方向完整覆盖模型表面。
      */
     private static void shrinkWidthAxis(float[] min, float[] max, int widthAxis) {
@@ -290,7 +282,7 @@ public final class CharmCompat {
     }
 
     /**
-     * 返回「水平宽度轴」：X/Z 平面内 span 较小的那个轴（span 较大的是长度轴，保持不变）。
+     * 返回水平宽度轴：X/Z 平面内 span 较小的那个轴（span 较大的是长度轴，保持不变）。
      * 返回 0=X、2=Z；高度轴（Y）不参与，永不收缩。
      */
     private static int horizontalWidthAxis(List<float[]> verts) {

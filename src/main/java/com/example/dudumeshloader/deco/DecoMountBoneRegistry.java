@@ -10,45 +10,32 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * 存放「方块 index → 挂载骨骼」映射。武器与配件分两套独立映射：
- *
+ * 存放方块 index → 挂载骨骼映射。武器与配件分两套独立映射，互不影响：
  * <ul>
- *   <li><b>武器槽位</b>（默认骨骼 {@link #WEAPON_DEFAULT} = {@code weapon_mount}）：摆放 {@code IGun} 枪，
- *       每个槽位可指定接受的枪类型（pistol/rifle/sniper/smg…），类型缺省表示任意；</li>
- *   <li><b>配件骨骼</b>（{@link #ATTACHMENT_DEFAULT} = {@code attachment_mount}）：摆放 {@code IAttachment} 配件，
- *       暂不做类型约束。</li>
+ *   <li><b>武器槽位</b>（默认 {@link #WEAPON_DEFAULT} = {@code weapon_mount}）：摆放 {@code IGun}，
+ *       每槽可指定接受的枪类型（缺省表示任意）；</li>
+ *   <li><b>配件骨骼</b>（默认 {@link #ATTACHMENT_DEFAULT} = {@code attachment_mount}）：摆放
+ *       {@code IAttachment}，不做类型约束。</li>
  * </ul>
+ * 每槽可指定容纳物品的模型缩放 {@code scale}（默认 {@link #DEFAULT_SCALE} = 0.5，与 TACZ statue 一致）。
  *
- * <p>两套骨骼各自独立，互不影响——枪永远落在 {@code weapon_mount} 系骨骼上，配件永远落在
- * {@code attachment_mount} 系骨骼上，即便 index JSON 同时声明了多组。</p>
- *
- * <p>每个槽位都可指定一个<b>容纳物品的模型缩放比例</b> {@code scale}（默认 {@link #DEFAULT_SCALE}=0.5，
- * 与 TACZ statue 一致）。缩放按槽位独立生效，用于把枪/配件适配到不同尺寸的挂载点。</p>
+ * <p>index JSON 写法：
+ * <pre>
+ *   "weapon_mounts": [
+ *     { "bone": "weapon_mount",      "type": "rifle",           "scale": 0.5 },
+ *     { "bone": "weapon_mount_pist", "type": ["pistol", "smg"], "scale": 0.6 }
+ *   ],
+ *   "attachment_bones": [
+ *     { "bone": "attachment_mount", "scale": 0.5 }
+ *   ]
+ * </pre>
+ * {@code type} 可写单个字符串或字符串数组，缺省 / 空字符串 / 空数组均表示任意类型；{@code scale} 需
+ * &gt;0。兼容旧写法 {@code mount_bones}（字符串数组）与单值 {@code mount_bone}，缺失则回退默认骨骼。
+ * 注意 Blockbench 骨骼名必须唯一，多个挂载点需用不同名。</p>
  *
  * <p>由 {@code BlockIndexCollisionMixin} 在 TACZ 加载 index JSON 时填充，键为 index 的
  * <b>文件路径 key</b>（{@code <namespace>:<文件名>}，即物品 {@code BlockId}），与
- * {@link DecoCollisionRegistry} 完全一致；同时按 JSON 内的 {@code id} 字段兼容存一份。</p>
- *
- * <p>index JSON 写法（武器与配件可分别多槽位，每槽可带 scale）：
- * <pre>
- *   "weapon_mounts": [
- *     { "bone": "weapon_mount",       "type": "rifle",              "scale": 0.5 },
- *     { "bone": "weapon_mount_pist",  "type": ["pistol", "smg"],    "scale": 0.6 },
- *     { "bone": "weapon_mount_any",   "type": [] }                  // scale 缺省 = 0.5
- *   ],
- *   "attachment_bones": [
- *     { "bone": "attachment_mount",   "scale": 0.5 },
- *     { "bone": "attachment_mount_1", "scale": 0.8 }
- *   ]
- * </pre>
- * 武器字段 {@code weapon_mounts} 为对象数组，每个元素含 {@code bone}（骨骼名）、可选 {@code type}
- * （接受的枪类型，可写单个字符串如 {@code "rifle"}，或字符串数组如 {@code ["rifle","pistol"]}；
- * 缺省/空字符串/空数组均表示任意类型）与可选 {@code scale}（物品缩放比例，&gt;0，缺省 0.5）。
- * 兼容旧写法 {@code mount_bones}（字符串数组，全部视为无类型、默认缩放）与单值 {@code mount_bone}。
- * 缺失则回退单槽默认骨骼 {@link #WEAPON_DEFAULT}（任意类型、默认缩放）。
- * 配件字段 {@code attachment_bones} 可为对象数组（每元素含 {@code bone}+可选 {@code scale}）或旧字符串数组
- * （默认缩放），缺失回退单 {@code attachment_bone}（默认 {@link #ATTACHMENT_DEFAULT}、默认缩放）。
- * 注意 Blockbench 骨骼名必须唯一，故多个挂载点需使用不同名。</p>
+ * {@link DecoCollisionRegistry} 一致；同时按 JSON 内的 {@code id} 字段兼容存一份。</p>
  */
 public final class DecoMountBoneRegistry {
     public static final String WEAPON_DEFAULT = "weapon_mount";
@@ -86,7 +73,7 @@ public final class DecoMountBoneRegistry {
         }
     }
 
-    /** 一个配件挂载槽：骨骼名 + 物品缩放比例（暂不做类型约束）。 */
+    /** 一个配件挂载槽：骨骼名 + 物品缩放比例（不做类型约束）。 */
     public static final class AttachmentMountSlot {
         public final String bone;
         public final float scale;

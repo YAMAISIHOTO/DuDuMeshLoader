@@ -21,21 +21,15 @@ import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 
 /**
- * 武器架的「按 O 放入」交互。
+ * 武器架的按 O 放入交互。
  *
- * <p>背景：TACZ 的 {@code ClientPreventGunClick} 会在<b>手持枪</b>时拦截右键（除非 {@code InteractKey} 按下），
- * 导致持枪右键根本到不了方块（必须先按住 O 进入交互模式，右键才放行）。因此原先「放武器」需要 O + 右键同时按。</p>
+ * <p>TACZ 的 {@code ClientPreventGunClick} 会在手持枪时拦截右键（除非 {@code InteractKey} 按下），
+ * 持枪右键到不了方块。这里直接监听 TACZ 的 {@link InteractKey#INTERACT_KEY}（默认 O，尊重玩家改键）：
+ * 命中武器架且手持枪或配件时调用 {@code Minecraft.gameMode.useItemOn(...)}，相当于一次定向右键，
+ * 由服务端 {@code DecoInteractEvents} 完成放入，故只需按 O。空手时不处理（开合仍走潜行 + 右键）。</p>
  *
- * <p>本监听器直接监听 TACZ 的 {@link InteractKey#INTERACT_KEY}（默认 O，尊重玩家改键）：命中武器架且
- * 手持 TACZ 枪或配件时，直接调用 {@code Minecraft.gameMode.useItemOn(...)} 触发对当前注视方块的 use()，
- * 由服务端 {@code DecoInteractEvents} 执行放入。相当于一次「定向右键」，但绕过了持枪右键被拦截的问题，
- * 故<b>只需按 O 即可放入</b>。</p>
- *
- * <p>注意：早期版本此处用反射调用 {@code Minecraft.startUseItem()}，但生产环境 jar 运行时方法名为 SRG/混淆名，
- * 反射 {@code getDeclaredMethod("startUseItem")} 必然抛 {@code NoSuchMethodException} 且被静默吞掉，导致 O 单独
- * 无效。改用公开稳定的 {@code gameMode.useItemOn(player, hit, hand)} 彻底消除该脆弱性。</p>
- *
- * <p>空手时本监听器不处理（开合仍走原先的 潜行+右键；TACZ 的 O 键在空手时本就无作为）。</p>
+ * <p>不能用反射调 {@code Minecraft.startUseItem()}：生产环境方法名是 SRG 名，
+ * {@code getDeclaredMethod} 必抛 {@code NoSuchMethodException} 且被静默吞掉。</p>
  */
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(modid = DuDuMeshLoaderMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)

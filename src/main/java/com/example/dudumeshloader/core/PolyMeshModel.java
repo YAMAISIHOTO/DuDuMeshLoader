@@ -27,7 +27,7 @@ import java.util.*;
 @OnlyIn(Dist.CLIENT)
 public class PolyMeshModel {
     /**
-     * 骨骼级 VBO 渲染（DuDuMeshLoader A1 方案）。
+     * 骨骼级 VBO 渲染。
      *
      * <p>每个 poly_mesh 骨骼的几何在构造时上传 GPU 一次（VBO），每帧只提交该骨骼的
      * model matrix + 一次 drawWithShader，用 MC 标准实体着色器（ModelViewMat 同时变换
@@ -35,7 +35,7 @@ public class PolyMeshModel {
      * 法线正确，无需专用着色器，因此完全兼容 Iris（Iris 会把标准 shader 替换成 GBuffer）。</p>
      *
      * <p>仅当骨骼存在<b>非等比缩放</b>（x/y/z scale 不相等）时，标准着色器的法线才会
-     * 失真——此时整棵模型回退到 CPU 逐顶点 VertexConsumer 路径（见 {@link #allBonesRigid}），
+     * 失真，此时整棵模型回退到 CPU 逐顶点 VertexConsumer 路径（见 {@link #allBonesRigid}），
      * 保证正确性优先。</p>
      */
     private static final boolean ENABLE_LEGACY_VBO = true;
@@ -179,9 +179,7 @@ public class PolyMeshModel {
         }
     }
 
-    // =========================================================================
     // 描画エントリポイント (overlay を受け取るよう修正)
-    // =========================================================================
 
     public void renderWithTranslucentSplit(PoseStack ps, MultiBufferSource buf,
                                            ResourceLocation tex, int light, int overlay, boolean useVBO) {
@@ -234,9 +232,7 @@ public class PolyMeshModel {
         }
     }
 
-    // =========================================================================
     // VBO 管理
-    // =========================================================================
 
     /**
      * 現在のボーンツリーを辿り、実際に描画され得る（isVisible()==true かつ
@@ -304,9 +300,7 @@ public class PolyMeshModel {
         fullyUploadedLights.clear();
     }
 
-    // =========================================================================
     // VBO 描画パス
-    // =========================================================================
 
     private void renderVBO(PoseStack ps, ResourceLocation tex, int light, boolean translucentPass,
                            boolean forceNoCull) {
@@ -350,9 +344,7 @@ public class PolyMeshModel {
         ps.popPose();
     }
 
-    // =========================================================================
     // VertexConsumer フォールバックパス
-    // =========================================================================
 
     private void renderBonesConsumer(IPolyMeshBone bone, PoseStack ps, VertexConsumer buf,
                                      int light, int overlay, float r, float g, float b, float a,
@@ -488,7 +480,7 @@ public class PolyMeshModel {
      * TaCZ 倍镜特殊阶段使用的三角形直写入口。
      *
      * <p>该入口仍由外层保证在原生 stencil 状态有效期间同步提交，但不再把
-     * poly_mesh 的三角形补成 QUADS。这样 attachment 与已验证的 SBM 主路径使用
+     * poly_mesh 的三角形补成 QUADS。这样 attachment 与 SBM 主路径使用
      * 相同的逐角点法线、三角拓扑与着色器插值方式。</p>
      */
     public void renderSpecialSubtreeTrianglesDirect(String rootBoneName, PoseStack ps,
@@ -501,7 +493,7 @@ public class PolyMeshModel {
     }
 
     /**
-     * perfdiag.2 专用入口。渲染行为与普通 triangles 入口完全相同，只在诊断启用时
+     * 诊断专用入口。渲染行为与普通 triangles 入口完全相同，只在诊断启用时
      * 记录子树 inclusive 耗时，以及其中每个 mesh 的顶点变换/写入子项。
      */
     public void renderSpecialSubtreeTrianglesDirectProfiled(String rootBoneName, PoseStack ps,

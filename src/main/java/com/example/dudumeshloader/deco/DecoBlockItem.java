@@ -18,15 +18,13 @@ import java.util.Optional;
 /**
  * {@code dudumeshloader:block_deco} 的方块物品。
  *
- * <p>实现 {@link BlockItemDataAccessor}（即 {@code IBlock}），
- * 通过 NBT {@code BlockId} 携带所指向的 TACZ 方块 index。
- * 当手中物品没有显式 {@code BlockId} 时，回退到默认的 {@link DecoRegistries#DECO_BLOCK_ID}，
- * 使得直接从创造标签页拿到的物品也能正确渲染。</p>
+ * <p>实现 {@link BlockItemDataAccessor}（即 {@code IBlock}），通过 NBT {@code BlockId} 携带所指向的
+ * TACZ 方块 index；手中物品没有显式 {@code BlockId} 时回退默认的 {@link DecoRegistries#DECO_BLOCK_ID}，
+ * 使从创造标签页直接拿到的物品也能正确渲染。</p>
  *
- * <p>名称解析与 TACZ 的 {@code GunSmithTableItem} 完全一致：方块 index JSON 的
- * {@code name} 字段被视为<b>翻译键</b>，通过 {@link Component#translatable(String)} 解析，
- * 因此枪包作者可在 lang 文件中对 {@code name} 给出的键做汉化。
- * 若 index 未加载（例如服务端），则回退到父类的固定键 {@code block.dudumeshloader.block_deco}。</p>
+ * <p>名称解析与 TACZ 的 {@code GunSmithTableItem} 一致：index JSON 的 {@code name} 字段是<b>翻译键</b>，
+ * 通过 {@link Component#translatable(String)} 解析，枪包作者可在 lang 文件里汉化；index 未加载
+ * （例如服务端）时回退父类的固定键 {@code block.dudumeshloader.block_deco}。</p>
  */
 public class DecoBlockItem extends BlockItem implements BlockItemDataAccessor {
     public DecoBlockItem(net.minecraft.world.level.block.Block block, Item.Properties properties) {

@@ -42,16 +42,14 @@ import org.jetbrains.annotations.Nullable;
 /**
  * 武器架方块 {@code dudumeshloader:weapon_rack}。
  *
- * <p>原理同 TACZ 的 {@code StatueBlock} + 原版物品展示框：右键手持 TACZ 枪或配件放入，
- * 空手右键取出。外观来自其方块 index 模型（复用 {@code TaczPolyMeshBlockModel} + 现有
- * poly_mesh 注入）；枪落在 index 的 {@code weapon_mount} 系骨骼、配件落在独立的
- * {@code attachment_mount} 系骨骼上（由对应 index 选项指定）。</p>
+ * <p>原理同 TACZ 的 {@code StatueBlock} + 原版物品展示框：右键手持 TACZ 枪或配件放入，空手右键取出。
+ * 外观来自其方块 index 模型（复用 {@code TaczPolyMeshBlockModel} + 现有 poly_mesh 注入）；枪落在
+ * index 的 {@code weapon_mount} 系骨骼、配件落在独立的 {@code attachment_mount} 系骨骼上。</p>
  *
  * <p>碰撞档位与 {@link DecoBlock} 共用同一套 {@link DecoCollisionType} 枚举与
- * {@link DecoCollisionRegistry}：放置时按手中物品的 {@code BlockId}（index id）反查
- * 注册表得到（该值由 {@code BlockIndexCollisionMixin} 在加载 index JSON 的
- * {@code collision} 选项时写入），并存入方块状态，无需读取方块实体即可判定形状与根块。
- * 因此枪包作者只需在武器架的 index JSON 写 {@code "collision":"a"|"b"|"c"|"slab"|"null"} 即可。</p>
+ * {@link DecoCollisionRegistry}：放置时按手中物品的 {@code BlockId} 反查注册表得到（由
+ * {@code BlockIndexCollisionMixin} 在加载 index JSON 时写入），存入方块状态。枪包作者只需在 index
+ * JSON 写 {@code "collision":"a"|"b"|"c"|"slab"|"null"} 即可。</p>
  */
 public class DecoWeaponRackBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -79,8 +77,8 @@ public class DecoWeaponRackBlock extends BaseEntityBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        // 模型正面「面朝玩家」：FACING = 玩家朝向的相反方向（指向玩家）。
-        // 碰撞箱（仅 DOUBLE_B 双块）占「本体 + 玩家视角右侧一格」：
+        // 模型正面面朝玩家：FACING = 玩家朝向的相反方向（指向玩家）。
+        // 碰撞箱（仅 DOUBLE_B 双块）占本体 + 玩家视角右侧一格：
         //   第二格方向 = 玩家朝向的顺时针 90° = FACING 逆时针 90°（因 FACING 指向玩家）。
         Direction playerFacing = context.getHorizontalDirection();
         Direction direction = playerFacing.getOpposite(); // 指向玩家

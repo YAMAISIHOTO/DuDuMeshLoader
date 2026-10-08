@@ -54,7 +54,7 @@ public final class PerformanceDiagnostics {
     private static final Timer ATTACHMENT_SPECIAL = new Timer();
     private static final Timer ATTACHMENT_IDLE_SIGHT = new Timer();
 
-    /** perfdiag.2：倍镜特殊直写的细分阶段。 */
+    /** 倍镜特殊直写的细分阶段。 */
     private static final Timer ATTACHMENT_SPECIAL_PRECHECK = new Timer();
     private static long attachmentSpecialPrecheckHits;
     private static final Timer ATTACHMENT_SPECIAL_GET_BUFFER = new Timer();

@@ -7,7 +7,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 /**
- * 将 {@code dudumeshloader:block_deco} 物品加入原版「功能性方块」创造标签页，
+ * 将 {@code dudumeshloader:block_deco} 物品加入原版功能性方块创造标签页，
  * 方便在游戏内直接获取用于测试。
  */
 @Mod.EventBusSubscriber(modid = DuDuMeshLoaderMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)

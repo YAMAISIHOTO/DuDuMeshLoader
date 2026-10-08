@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 存放「方块 index 的 {@code collision} 选项 → 碰撞档位」映射。
+ * 存放方块 index 的 {@code collision} 选项 → 碰撞档位映射。
  *
  * <p>该映射由 {@code BlockIndexCollisionMixin} 在 TACZ 加载 index JSON（{@code JsonDataManager#apply}）时填充。
  * 主键为资源文件路徑（{@code index/blocks/<文件名>.json} → {@code <namespace>:<文件名>}），

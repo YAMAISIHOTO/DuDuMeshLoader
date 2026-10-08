@@ -16,11 +16,11 @@ import java.util.Map;
 /**
  * 按 {@code ItemDisplayContext} 拆分枪身 poly_mesh 渲染耗时的轻量诊断器。
  *
- * <p>与 {@link PerformanceDiagnostics} 不同，本类<b>始终启用</b>（无需 perfdiag 版本或
- * JVM 参数），仅在渲染线程对每次枪身渲染打 2 次 {@code nanoTime}，开销可忽略。
+ * <p>与 {@link PerformanceDiagnostics} 不同，本类<b>始终启用</b>（无需 JVM 参数），
+ * 仅在渲染线程对每次枪身渲染打 2 次 {@code nanoTime}，开销可忽略。
  * 每 5 秒汇总一次各上下文（FIRST_PERSON / THIRD_PERSON / FIXED 展示架 / GROUND 掉落物）
  * 的调用次数、总耗时、每帧耗时与单次最大耗时，并附首次捕获的渲染路径描述，
- * 用于定位「展示架帧数比第一人称低」这类按场景出现的性能差异。</p>
+ * 用于定位展示架帧数比第一人称低这类按场景出现的性能差异。</p>
  */
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -33,9 +33,9 @@ public final class GunCtxProfiler {
     private static final Map<String, Timer> ROOT = new LinkedHashMap<>();
     /** 各上下文的 TaCZ 原生 super.render 阶段耗时（cube 枪体 + 动画，不含本模组 poly）。 */
     private static final Map<String, Timer> NATIVE = new LinkedHashMap<>();
-    /** 各上下文的「附件解析 / scope 渲染」阶段耗时（BedrockGunModel.render 进入 cube 绘制之前）。 */
+    /** 各上下文的附件解析 / scope 渲染阶段耗时（BedrockGunModel.render 进入 cube 绘制之前）。 */
     private static final Map<String, Timer> ATTACH = new LinkedHashMap<>();
-    /** 各上下文的「cube 枪体绘制」阶段耗时（即 BedrockAnimatedModel.render 本体，含本模组 poly 注入）。 */
+    /** 各上下文的cube 枪体绘制阶段耗时（即 BedrockAnimatedModel.render 本体，含本模组 poly 注入）。 */
     private static final Map<String, Timer> CUBE = new LinkedHashMap<>();
     /** 各上下文首次捕获的渲染路径描述（AR 是否激活 / 是否走 VBO / 是否刚性）。 */
     private static final Map<String, String> PATH = new LinkedHashMap<>();
@@ -68,13 +68,13 @@ public final class GunCtxProfiler {
         NATIVE.computeIfAbsent(ctx, k -> new Timer()).add(ns);
     }
 
-    /** 记录各上下文的「附件解析 / scope 渲染」阶段耗时（cube 绘制之前）。 */
+    /** 记录各上下文的附件解析 / scope 渲染阶段耗时（cube 绘制之前）。 */
     public static void recordAttachPhase(String ctx, long ns) {
         if (ns <= 0L) return;
         ATTACH.computeIfAbsent(ctx, k -> new Timer()).add(ns);
     }
 
-    /** 记录各上下文的「cube 枪体绘制」阶段耗时（BedrockAnimatedModel.render 本体）。 */
+    /** 记录各上下文的cube 枪体绘制阶段耗时（BedrockAnimatedModel.render 本体）。 */
     public static void recordCubePhase(String ctx, long ns) {
         if (ns <= 0L) return;
         CUBE.computeIfAbsent(ctx, k -> new Timer()).add(ns);

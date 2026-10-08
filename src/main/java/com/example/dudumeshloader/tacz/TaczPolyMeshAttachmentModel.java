@@ -43,7 +43,7 @@ public class TaczPolyMeshAttachmentModel extends BedrockAttachmentModel {
     /** 当前 super.render 是否正在 TaCZ 原生 -942 scope_body AR 收集阶段。 */
     private boolean nativeScopeArCollection;
 
-    /** AR consumer 一旦拒绝特殊子树，后续帧完整回到已经验证过的同步路径。 */
+    /** AR consumer 一旦拒绝特殊子树，后续帧完整回到原生同步路径。 */
     private boolean nativeScopeArCircuitOpen;
 
     private static final org.apache.logging.log4j.Logger MESH_LOG =
@@ -77,7 +77,7 @@ public class TaczPolyMeshAttachmentModel extends BedrockAttachmentModel {
      * 由 BedrockAttachmentModelMixin 在 TaCZ 原生 renderTempPart 阶段调用。
      *
      * <p>PoseStack 此时已包含叶骨之前的全部祖先变换，stencil/color/depth 状态也仍由
-     * TaCZ 管理。poly_mesh 必须继续使用已经验证过的 TRIANGLES RenderType，不能再写入
+     * TaCZ 管理。poly_mesh 必须继续使用原生的 TRIANGLES RenderType，不能再写入
      * cube 的 QUADS consumer；完成后立即刷新，确保真正绘制发生在本次 stencil 阶段内。</p>
      */
     public void renderSpecialPolyMeshSubtree(String boneName, PoseStack poseStack,
@@ -137,7 +137,7 @@ public class TaczPolyMeshAttachmentModel extends BedrockAttachmentModel {
                     // 避免 scope_body 等大几何每帧 CPU 逐顶点直写。cutoutCull 的 setup 不含
                     // stencil shard，不会覆盖 TaCZ 在 renderTempPart 前设置的模板状态。
                     // 骨骼含非等比缩放时回退 CPU 直写以保证法线正确。
-                    // 注：掉落物/展示框的「不显示」根因是纹理反查失败 + 单面剔除（已在 render
+                    // 注：掉落物/展示框的不显示根因是纹理反查失败 + 单面剔除（已在 render
                     // 的纹理反查与 renderPolyMeshNormalAttachment 的 forceNoCull 中修复），
                     // 与 VBO 直绘无关，故这里对所有非 AR 场景统一走 VBO，避免非第一人称回退 CPU。
                     if (ClientConfig.meshScopeVbo() && polyMeshModel.isAllBonesRigid()) {

@@ -40,17 +40,12 @@ import org.jetbrains.annotations.Nullable;
 /**
  * 纯装饰方块 {@code dudumeshloader:block_deco}。
  *
- * <p>取消了 TACZ 工作台的开 GUI 逻辑，仅保留基于 poly_mesh / 基岩立方体模型的渲染。
- * 通过方块状态属性 {@code collision} 在四种碰撞之间切换：
- * <ul>
- *   <li>{@code a}  → 1×1×1 单块（workbench_a）</li>
- *   <li>{@code b}  → 2×1×1 横向双块（workbench_b），用 {@link BedPart}</li>
- *   <li>{@code c}  → 1×2×1 纵向双块（workbench_c），用 {@link DoubleBlockHalf}</li>
- *   <li>{@code slab} → 底部半砖碰撞</li>
- * </ul>
+ * <p>取消了 TACZ 工作台的开 GUI 逻辑，仅保留基于 poly_mesh / 基岩立方体模型的渲染。方块状态属性
+ * {@code collision} 决定碰撞形状：{@code a} = 1×1×1（workbench_a）、{@code b} = 2×1×1 横向双块
+ * （{@link BedPart}）、{@code c} = 1×2×1 纵向双块（{@link DoubleBlockHalf}）、{@code slab} = 底部半砖。</p>
  *
- * <p>碰撞档位由放置时手中物品的 {@code BlockId}（index id）反查
- * {@link DecoCollisionRegistry} 得到，并写入方块状态，因此无需读取方块实体即可判定形状与根块。</p>
+ * <p>碰撞档位由放置时手中物品的 {@code BlockId}（index id）反查 {@link DecoCollisionRegistry} 得到，
+ * 并写入方块状态，因此无需读取方块实体即可判定形状与根块。</p>
  */
 public class DecoBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;

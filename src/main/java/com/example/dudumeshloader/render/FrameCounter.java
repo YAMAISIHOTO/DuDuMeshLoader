@@ -6,7 +6,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 /**
  * 客户端每渲染帧自增的单调计数器。
  *
- * <p>用于让 {@code PolyMeshModel} 的「骨骼世界矩阵帧级缓存」判断何时失效：
+ * <p>用于让 {@code PolyMeshModel} 的骨骼世界矩阵帧级缓存判断何时失效：
  * 一次渲染里同一把枪会被多次提交（VR 双目、阴影、倍镜叠加层等），每遍都重走整棵
  * 骨骼树是浪费。缓存每帧只算一次，跨遍复用。计数由
  * {@link ShaderStateTracker#onRenderTick} 在 {@code RenderTickEvent(Phase.START)}

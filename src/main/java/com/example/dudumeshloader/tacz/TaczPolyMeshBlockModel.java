@@ -49,9 +49,7 @@ public class TaczPolyMeshBlockModel extends BedrockModel {
         super(pojo, version);
     }
 
-    // =========================================================================
     // render() オーバーライド
-    // =========================================================================
 
     @Override
     public void render(PoseStack poseStack, ItemDisplayContext transformType,
@@ -124,9 +122,7 @@ public class TaczPolyMeshBlockModel extends BedrockModel {
         }
     }
 
-    // =========================================================================
     // loadPolyMesh
-    // =========================================================================
 
     /**
      * geo.json を読み込んで poly_mesh ボーンを登録する。
@@ -183,9 +179,7 @@ public class TaczPolyMeshBlockModel extends BedrockModel {
         return polyMeshModel != null;
     }
 
-    // =========================================================================
     // TaczPartAdapter
-    // =========================================================================
 
     private static class TaczPartAdapter implements IPolyMeshBone {
         private final BedrockPart part;

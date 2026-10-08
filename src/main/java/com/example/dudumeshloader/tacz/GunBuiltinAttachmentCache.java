@@ -13,7 +13,7 @@ import java.util.Map;
  * 内置附件（枪型自带默认附件，如默认铁瞄/默认枪托）解析结果的缓存。
  *
  * <p>内置附件定义在枪型数据（{@code CommonGunIndex -> GunData.getBuiltInAttachments}）里，
- * 与具体枪物品的 NBT 无关，属于「枪型级别」的稳定数据。但 TaCZ 在
+ * 与具体枪物品的 NBT 无关，属于枪型级别的稳定数据。但 TaCZ 在
  * {@code GunItemDataAccessor.getBuiltinAttachment} 里每帧都
  * {@code AttachmentItemBuilder.build()} 新建一个 ItemStack，产生无谓的对象分配与 NBT 读写。
  * 这里按 {@code (gunId, type)} 缓存，命中时只 {@code copy()} 返回。</p>

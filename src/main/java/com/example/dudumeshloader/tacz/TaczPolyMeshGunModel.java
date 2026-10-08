@@ -255,9 +255,7 @@ public class TaczPolyMeshGunModel extends com.tacz.guns.client.model.BedrockGunM
      * </ul>
      */
 
-    // =========================================================================
     // PolyMesh 描画ヘルパー
-    // =========================================================================
 
     /**
      * TaCZ 的 AR 枪身阶段只登记网格，不在这里刷新批次或改动 stencil。
@@ -397,7 +395,7 @@ public class TaczPolyMeshGunModel extends com.tacz.guns.client.model.BedrockGunM
                 cachedHasMagMesh = this.polyMeshModel.hasMeshInSubtree(GunModelConstant.MAG_NORMAL_NODE);
                 cachedHasAdditionalMagMesh = this.polyMeshModel.hasMeshInSubtree(GunModelConstant.MAG_ADDITIONAL_NODE);
 
-                // 判定该枪是否「纯 poly_mesh」（所有骨骼都无 cube）。若为纯 poly，则 TACZ 原生的
+                // 判定该枪是否纯 poly_mesh（所有骨骼都无 cube）。若为纯 poly，则 TACZ 原生的
                 // cube 渲染是纯冗余，可在 render 时清空 shouldRender 跳过整个逐骨骼 cube 循环。
                 this.cachedAllBonesPoly = computeAllBonesPoly(rawJson);
                 this.cachedSkipCubesReady = true;
@@ -419,7 +417,7 @@ public class TaczPolyMeshGunModel extends com.tacz.guns.client.model.BedrockGunM
     }
 
     /**
-     * 判断该枪 geo.json 是否「纯 poly_mesh」（所有骨骼均无 cube）。
+     * 判断该枪 geo.json 是否纯 poly_mesh（所有骨骼均无 cube）。
      * 纯 poly 时 TACZ 原生的 cube 渲染是冗余的，可在 render 时清空 shouldRender 跳过整个循环。
      */
     private boolean computeAllBonesPoly(JsonObject rawJson) {
@@ -570,9 +568,7 @@ public class TaczPolyMeshGunModel extends com.tacz.guns.client.model.BedrockGunM
         MESH_LOG.info("[DuDuMeshLoader] Registered TacZ model type: meshy");
     }
 
-    // =========================================================================
     // 内部クラス
-    // =========================================================================
 
     /**
      * additional_magazine アニメーションリスナーの PolyMesh 対応版。

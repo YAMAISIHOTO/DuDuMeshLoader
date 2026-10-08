@@ -29,9 +29,7 @@ public class GunDisplayInstanceMixin {
     @Shadow
     private volatile Pair<BedrockGunModel, ResourceLocation> lodModel;
 
-    // -----------------------------------------------------------------------
     // 通常モデル（既存）
-    // -----------------------------------------------------------------------
 
     @Inject(method = "checkTextureAndModel", at = @At("TAIL"))
     private void meshyloader$afterCheckTextureAndModel(GunDisplay display, CallbackInfo ci) {
@@ -58,9 +56,7 @@ public class GunDisplayInstanceMixin {
         return -1f;
     }
 
-    // -----------------------------------------------------------------------
     // LODモデル（新規）
-    // -----------------------------------------------------------------------
 
     /**
      * checkLod() の末尾に介入し、LOD用モデルにも poly_mesh を適用する。

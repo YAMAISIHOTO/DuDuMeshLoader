@@ -178,7 +178,7 @@ public class PolyMesh {
      *
      * <p>smooth normals 下，相邻面在共享边上的顶点拥有相同的 position/uv/normal，
      * 可被合并。去重后 GPU 顶点着色器只处理 unique 顶点，draw 数量由索引表维持，
-     * 从而显著降低顶点变换开销（实测约省 2/3）。</p>
+     * 从而显著降低顶点变换开销。</p>
      */
     private void buildIndexedData() {
         Map<VertexKey, Integer> dedup = new HashMap<>(vertexCount);
@@ -239,9 +239,7 @@ public class PolyMesh {
     private record VertexKey(int x, int y, int z, int u, int v, int nx, int ny, int nz) {
     }
 
-    // =========================================================================
     // SimpleBedrockModel 2.5.1 poly_mesh 读取与三角化语义
-    // =========================================================================
 
     private void bakePolys(boolean normalizedUvs, float texWidth, float texHeight,
                            float pivotX, float pivotY, float pivotZ,
@@ -497,9 +495,7 @@ public class PolyMesh {
                 && Math.abs(first.z - second.z) < POSITION_EPSILON;
     }
 
-    // =========================================================================
     // AR / VertexConsumer 主路径
-    // =========================================================================
 
     public void compileConsumer(PoseStack.Pose pose, VertexConsumer consumer,
                                 int lightmap, int overlay,
@@ -724,9 +720,7 @@ public class PolyMesh {
         compileConsumer(pose, consumer, lightmap, overlay, red, green, blue, alpha);
     }
 
-    // =========================================================================
     // 旧 VBO 管理（当前默认关闭，但保持格式与三角管线一致）
-    // =========================================================================
 
     public void ensureUploaded(int packedLight) {
         if (vertexCount == 0 || vboCache.containsKey(packedLight)) {
@@ -768,9 +762,7 @@ public class PolyMesh {
         VertexBuffer.unbind();
     }
 
-    // =========================================================================
     // 索引化 VBO（顶点去重 + 自定义 IBO + glDrawElements）
-    // =========================================================================
 
     /** 反射句柄：向 MC VertexBuffer 注入自定义索引缓冲。生产环境（reobf 后）字段名是 srg。 */
     private static final Field FIELD_INDEX_BUFFER_ID = reflectField("indexBufferId", "f_166860_");
@@ -836,7 +828,7 @@ public class PolyMesh {
                         .endVertex();
             }
             // 关键：upload 内部的 setupBufferState 会把 attribute pointer 写入
-            // 当前 VAO，但 upload 本身不会绑 VAO——所以必须先 bind()，否则
+            // 当前 VAO，但 upload 本身不会绑 VAO，所以必须先 bind()，否则
             // attribute pointer 会写到默认 VAO(=0) 而不是 arrayObjectId，渲染时找不到顶点。
             vbo.bind();
             vbo.upload(builder.end());
@@ -1020,9 +1012,7 @@ public class PolyMesh {
         indexedIboId = -1;
     }
 
-    // =========================================================================
     // 基础数据读取
-    // =========================================================================
 
     private static float transformX(float value, float pivot) {
         float local = value - pivot;

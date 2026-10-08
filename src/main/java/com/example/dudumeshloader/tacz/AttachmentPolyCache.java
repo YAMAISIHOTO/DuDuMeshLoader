@@ -8,14 +8,14 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 普通（非 mixin）工具类：按 geo.json 路径缓存已构建的配件 poly_mesh 模型。
  *
- * <p>关键修复：TACZ 的 {@code checkTextureAndModel}/{@code checkLod} 在 mixin 之前会把
- * {@code attachmentModel}/{@code lodModel} 字段重置成普通 {@link com.tacz.guns.client.model.BedrockAttachmentModel}，
- * 因此若每次都在 mixin 里 {@code new TaczPolyMeshAttachmentModel(...)}，则每帧/每次索引重建都会
- * 完整重解析 geo.json（上万顶点 + CharmCompat 注入 + ShaderStateTracker 注册），导致掏出配件即卡死。
- * 改为按 geoPath 缓存，整个会话内每个 geo.json 只解析一次，后续 mixin 触发只复用实例并刷新纹理。</p>
+ * <p>TACZ 的 {@code checkTextureAndModel}/{@code checkLod} 会在 mixin 之前把 {@code attachmentModel}/
+ * {@code lodModel} 重置成普通 {@link com.tacz.guns.client.model.BedrockAttachmentModel}，所以不能在
+ * mixin 里每次 {@code new TaczPolyMeshAttachmentModel(...)} —— 那会每帧重解析 geo.json（上万顶点 +
+ * CharmCompat 注入 + ShaderStateTracker 注册），掏出配件即卡死。按 geoPath 缓存后，每个 geo.json
+ * 整个会话只解析一次，后续只复用实例并刷新纹理。</p>
  *
- * <p>本类刻意放在 mixin 之外，因为 {@code @Mixin} 类不能被游戏代码直接引用
- * （直接调用其静态方法会触发 Mixin 将类判定为 invalid → NoClassDefFoundError）。</p>
+ * <p>刻意放在 mixin 之外：{@code @Mixin} 类不能被游戏代码直接引用，直接调用其静态方法会让 Mixin
+ * 把该类判定为 invalid → {@code NoClassDefFoundError}。</p>
  */
 public final class AttachmentPolyCache {
 

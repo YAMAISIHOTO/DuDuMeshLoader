@@ -21,9 +21,7 @@ import java.lang.reflect.Field;
 @Mixin(value = ClientAttachmentIndex.class, remap = false)
 public class ClientAttachmentIndexMixin {
 
-    // -----------------------------------------------------------------------
     // 通常モデル（既存）
-    // -----------------------------------------------------------------------
 
     @Inject(method = "checkTextureAndModel", at = @At("TAIL"))
     private static void meshyloader$afterCheckTextureAndModel(
@@ -57,9 +55,7 @@ public class ClientAttachmentIndexMixin {
         }
     }
 
-    // -----------------------------------------------------------------------
     // LODモデル（新規）
-    // -----------------------------------------------------------------------
 
     /**
      * checkLod() の末尾に介入し、アタッチメントのLODモデルにも poly_mesh を適用する。

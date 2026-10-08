@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 存放「方块 index → 显示文件（BlockDisplay）」映射。
+ * 存放方块 index → 显示文件（BlockDisplay）映射。
  *
  * <p>由 {@code BlockIndexCollisionMixin} 在 TACZ 加载 index JSON 时，抓取其中的
  * {@code display} 选项（{@link ResourceLocation}）写入本注册表。该 RL 指向的

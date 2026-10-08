@@ -98,7 +98,7 @@ public class DecoWeaponRackEntity extends BlockEntity {
     }
 
     /**
-     * 放入：按物品类型分流——{@code IGun} 进武器槽位（按槽位 type 约束匹配），
+     * 放入：按物品类型分流，{@code IGun} 进武器槽位（按槽位 type 约束匹配），
      * {@code IAttachment} 进配件槽位（attachment_mount 系）。成功占用并消耗 1 个手持物返回 true。
      */
     public boolean insertItem(ItemStack stack) {
@@ -113,7 +113,7 @@ public class DecoWeaponRackEntity extends BlockEntity {
     }
 
     /**
-     * 放入枪：取手持枪的类型，按索引顺序找到第一个「类型匹配 且 该槽为空」的武器槽放入。
+     * 放入枪：取手持枪的类型，按索引顺序找到第一个类型匹配 且 该槽为空的武器槽放入。
      * 类型来自 {@code CommonGunIndex.getType}（服务端安全）。无任何匹配空槽则返回 false（枪留在手里）。
      */
     private boolean insertGun(List<ItemStack> list, ItemStack stack, String gunType) {

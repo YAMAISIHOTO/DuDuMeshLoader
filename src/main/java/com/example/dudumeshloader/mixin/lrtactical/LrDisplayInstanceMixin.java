@@ -38,9 +38,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 public class LrDisplayInstanceMixin {
 
-    // ==========================================================================
     // Melee（近接武器）
-    // ==========================================================================
 
     @Pseudo
     @Mixin(targets = "me.xjqsh.lrtactical.client.resource.display.MeleeDisplayInstance",
@@ -100,9 +98,7 @@ public class LrDisplayInstanceMixin {
         }
     }
 
-    // ==========================================================================
     // Consumable（消耗品）
-    // ==========================================================================
 
     @Pseudo
     @Mixin(targets = "me.xjqsh.lrtactical.client.resource.display.ConsumableDisplayInstance",
@@ -151,9 +147,7 @@ public class LrDisplayInstanceMixin {
         }
     }
 
-    // ==========================================================================
     // Throwable（投擲物）
-    // ==========================================================================
 
     @Pseudo
     @Mixin(targets = "me.xjqsh.lrtactical.client.resource.display.ThrowableDisplayInstance",

@@ -24,18 +24,15 @@ import java.util.Set;
 /**
  * 单个武器架实例的动画运行态（客户端，按 BlockPos 缓存）。
  *
- * <p>构建流程：用 {@code display} RL 解析出几何体 POJO，重建一个 {@link BedrockAnimatedModel}
- * （与 TACZ 方块 index 共用同一套几何体，但可被子弹般驱动动画），再用 {@code animation} RL
- * 读取的 {@link BedrockAnimationFile} 创建 {@link AnimationController}。</p>
- *
- * <p>状态机（随方块实体的 {@code open} 切换）：
+ * <p>用 {@code display} RL 解析出几何体 POJO 重建 {@link BedrockAnimatedModel}（与 TACZ 方块 index
+ * 共用几何体，但可被驱动动画），再用 {@code animation} RL 读出的 {@link BedrockAnimationFile} 创建
+ * {@link AnimationController}。状态机随方块实体的 {@code open} 切换：
  * <pre>
- *   idle_close (默认循环)
- *       潜行右键 → open (PLAY_ONCE) → 完成后 → idle_open (循环)
- *       再次潜行右键 → close (PLAY_ONCE) → 完成后 → idle_close (循环)
+ *   idle_close (默认循环) --潜行右键--> open (PLAY_ONCE)  --> idle_open (循环)
+ *   idle_open            --潜行右键--> close (PLAY_ONCE) --> idle_close (循环)
  * </pre>
- * 动画名约定：{@code idle_close} / {@code open} / {@code idle_open} / {@code close}。
- * 缺失某个动画时优雅降级（如缺 idle 则停留绑定姿态）。</p>
+ * 动画名约定 {@code idle_close} / {@code open} / {@code idle_open} / {@code close}，缺失时优雅降级
+ * （如缺 idle 则停留绑定姿态）。</p>
  */
 @OnlyIn(Dist.CLIENT)
 public class DecoRackAnimationState {
@@ -143,11 +140,11 @@ public class DecoRackAnimationState {
     }
 
     /**
-     * 是否处于「完全关闭」状态——即 close 过渡动画已播完、停在 {@code idle_close} 循环。
+     * 是否处于完全关闭状态，即 close 过渡动画已播完、停在 {@code idle_close} 循环。
      *
      * <p>用于 {@code hide_on_close} 判定：仅在完全关闭时隐藏武器；播放 open 动画
      * （{@code OPENING}）、开启中（{@code OPEN}）、以及播放 close 动画（{@code CLOSING}）期间
-     * 都视为「未关闭」，武器应当可见。这能避免 close 动画一开始（此时方块实体的
+     * 都视为未关闭，武器应当可见。这能避免 close 动画一开始（此时方块实体的
      * {@code open} 已切为 false）武器就提前消失的问题。</p>
      */
     public boolean isClosed() {
