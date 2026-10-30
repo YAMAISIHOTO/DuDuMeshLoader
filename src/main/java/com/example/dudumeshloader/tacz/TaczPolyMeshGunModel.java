@@ -5,8 +5,6 @@ import com.example.dudumeshloader.core.PolyMeshModel;
 import com.example.dudumeshloader.api.IPolyMeshBone;
 import com.example.dudumeshloader.render.PolyMeshRenderTypes;
 import com.example.dudumeshloader.render.PerformanceDiagnostics;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -64,10 +62,6 @@ public class TaczPolyMeshGunModel extends com.tacz.guns.client.model.BedrockGunM
     private boolean warnedNonAcceleratedGunConsumer = false;
     /** 原生桥接异常只记录一次，避免渲染失败时进一步刷日志拖慢帧率。 */
     private boolean warnedNativeGunRenderFailure = false;
-    /** 该枪是否纯 poly_mesh（geo.json 所有骨骼均无 cube），loadPolyMesh 时判定一次。 */
-    private boolean cachedAllBonesPoly = false;
-    /** cachedAllBonesPoly 是否已判定完成。 */
-    private boolean cachedSkipCubesReady = false;
 
     private static final org.apache.logging.log4j.Logger MESH_LOG =
             org.apache.logging.log4j.LogManager.getLogger("MeshyLoader");
@@ -136,16 +130,11 @@ public class TaczPolyMeshGunModel extends com.tacz.guns.client.model.BedrockGunM
 
         // 只调用一次 TaCZ 原生入口。主体 poly_mesh 由 BedrockGunModelMixin 在原生枪身
         // 阶段追加：普通路径仍处于 stencil 清理前，AR 路径仍处于 -940 图层回调内。
-        // 纯 poly_mesh 枪：清空 shouldRender 跳过 TACZ 原生的逐骨骼 cube 循环（poly_mesh 已替代）。
-        // shouldRender 是共享字段（同枪型 FP/FIXED/GROUND 共用），必须 save/restore 避免污染其它上下文。
-        List<BedrockPart> savedShouldRender = null;
-        if (ClientConfig.meshSkipNativeCubes() && cachedSkipCubesReady && cachedAllBonesPoly) {
-            List<BedrockPart> shouldRender = getShouldRender();
-            if (!shouldRender.isEmpty()) {
-                savedShouldRender = new ArrayList<>(shouldRender);
-                shouldRender.clear();
-            }
-        }
+        // shouldRender 必须保持完整：它既是逐骨骼 cube 循环的入口，也是 FunctionalRenderer
+        // 的唯一派发点。BedrockModel.render 遍历 shouldRender 调 BedrockPart.render，
+        // FunctionalBedrockPart 在其中执行 functionalRenderer，清空它会连带停掉弹匣等级显隐、
+        // 瞄具隐藏、枪口闪光、膛内子弹等骨骼级行为。纯 poly_mesh 枪本身没有 cube 可画，
+        // 保留遍历只是空转；charm 注入的虚拟 cube 已清空 polygons，也不会画出白盒。
         nativeGunRenderActive = true;
         nativeGunRenderContext = transformType == null ? "NULL" : transformType.name();
         poseStack.pushPose();
@@ -154,9 +143,6 @@ public class TaczPolyMeshGunModel extends com.tacz.guns.client.model.BedrockGunM
         } finally {
             poseStack.popPose();
             nativeGunRenderActive = false;
-            if (savedShouldRender != null) {
-                getShouldRender().addAll(savedShouldRender);
-            }
             polyMeshModel.clearExcludeSubtree();
             if (shouldRestoreAcceleration) {
                 com.tacz.guns.compat.ar.ARCompat.resetAcceleration();
@@ -395,11 +381,6 @@ public class TaczPolyMeshGunModel extends com.tacz.guns.client.model.BedrockGunM
                 cachedHasMagMesh = this.polyMeshModel.hasMeshInSubtree(GunModelConstant.MAG_NORMAL_NODE);
                 cachedHasAdditionalMagMesh = this.polyMeshModel.hasMeshInSubtree(GunModelConstant.MAG_ADDITIONAL_NODE);
 
-                // 判定该枪是否纯 poly_mesh（所有骨骼都无 cube）。若为纯 poly，则 TACZ 原生的
-                // cube 渲染是纯冗余，可在 render 时清空 shouldRender 跳过整个逐骨骼 cube 循环。
-                this.cachedAllBonesPoly = computeAllBonesPoly(rawJson);
-                this.cachedSkipCubesReady = true;
-
                 // loadPolyMesh 後に additional_magazine の FunctionalRenderer を再セットアップする。
                 // BedrockGunModel のコンストラクタで setFunctionalRenderer が呼ばれた時点では
                 // cachedHasMagMesh / cachedHasAdditionalMagMesh がまだ false のため、
@@ -414,33 +395,6 @@ public class TaczPolyMeshGunModel extends com.tacz.guns.client.model.BedrockGunM
         } catch (Exception e) {
             MESH_LOG.error("[MeshyDebug][loadPolyMesh] FAILED: location={}", modelLocation, e);
         }
-    }
-
-    /**
-     * 判断该枪 geo.json 是否纯 poly_mesh（所有骨骼均无 cube）。
-     * 纯 poly 时 TACZ 原生的 cube 渲染是冗余的，可在 render 时清空 shouldRender 跳过整个循环。
-     */
-    private boolean computeAllBonesPoly(JsonObject rawJson) {
-        JsonArray geometries = rawJson.has("minecraft:geometry")
-                ? rawJson.getAsJsonArray("minecraft:geometry") : null;
-        if (geometries == null || geometries.isEmpty()) {
-            return false;
-        }
-        JsonObject geo = geometries.get(0).getAsJsonObject();
-        JsonArray bones = geo.getAsJsonArray("bones");
-        if (bones == null || bones.isEmpty()) {
-            return false;
-        }
-        for (JsonElement boneElem : bones) {
-            JsonObject boneObj = boneElem.getAsJsonObject();
-            if (boneObj.has("cubes")) {
-                JsonArray cubes = boneObj.getAsJsonArray("cubes");
-                if (cubes != null && cubes.size() > 0) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 
     /**

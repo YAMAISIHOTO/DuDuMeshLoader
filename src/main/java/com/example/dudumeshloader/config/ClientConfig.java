@@ -15,7 +15,6 @@ public final class ClientConfig {
     private static final ForgeConfigSpec.BooleanValue MESH_SINGLE_SIDED;
     private static final ForgeConfigSpec.BooleanValue MESH_SCOPE_VBO;
     private static final ForgeConfigSpec.BooleanValue MESH_DISABLE_AR_FOR_ITEM;
-    private static final ForgeConfigSpec.BooleanValue MESH_SKIP_NATIVE_CUBES;
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -51,14 +50,6 @@ public final class ClientConfig {
                         "Restart the game after changing this option."
                 )
                 .define("meshDisableArForItem", true);
-        MESH_SKIP_NATIVE_CUBES = builder
-                .comment(
-                        "Skip TaCZ's native cube rendering for guns whose every bone is covered by poly_mesh,",
-                        "since the cubes are redundant low-poly copies. This skips the whole per-bone cube loop.",
-                        "Only disabled if a gun shows missing parts (holes) after enabling this.",
-                        "Restart the game after changing this option."
-                )
-                .define("meshSkipNativeCubes", true);
         SPEC = builder.build();
     }
 
@@ -83,10 +74,5 @@ public final class ClientConfig {
     /** 返回物品展示框(FIXED)/掉落物(GROUND)是否禁用 AR（默认 true）。 */
     public static boolean meshDisableArForItem() {
         return MESH_DISABLE_AR_FOR_ITEM.get();
-    }
-
-    /** 返回是否跳过 TaCZ 原生 cube 渲染（默认 true）。 */
-    public static boolean meshSkipNativeCubes() {
-        return MESH_SKIP_NATIVE_CUBES.get();
     }
 }
